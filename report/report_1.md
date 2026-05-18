@@ -14,7 +14,11 @@ Ovaj izvještaj analizira razvoj i implementaciju aplikacije *Queer Icons Networ
 
 ## Uvod
 
-Povijest queer zajednice često je bila fragmentirana ili sustavno brisana iz mainstream narativa. Tradicionalni enciklopedijski prikazi nude linearne biografije koje rijetko naglašavaju ključnu komponentu: *utjecaj i zajednicu*. Svrha *Queer Icons Network* aplikacije je premostiti taj jaz stvaranjem interaktivnog ekosustava u kojem korisnik može vizualno uočiti kako su aktivisti iz 1970-ih postali temeljna inspiracija za današnje pop ikone.
+Povijest queer zajednice često je bila fragmentirana ili sustavno brisana iz mainstream narativa, ostavljajući iza sebe praznine koje su popunjavane kroz usmenu predaju, underground scenu i umjetničke performanse. Tradicionalni enciklopedijski prikazi nude linearne, izolirane biografije koje propuštaju naglasiti ključnu komponentu preživljavanja i napretka zajednice: relacijsku mrežu utjecaja i mentorsku strukturu "izabranih obitelji" (chosen families). 
+
+U popularnoj kulturi, queer identitet se razvijao od simbola subverzije do pokretača globalnih trendova. Od pionira poput Marshe P. Johnson i Sylvestera, koji su u San Franciscu i New Yorku postavljali temelje kroz aktivizam ukorijenjen u klupskoj kulturi, do Davida Bowieja i Freddieja Mercuryja koji su redefinirali muškost pred milijunima, povijest queer utjecaja je zapravo povijest međusobnog osnaživanja. Moderni fenomeni, poput globalne dominacije drag kulture predvođene RuPaulom ili avangardnog popa Lady Gage, nisu izolirani incidenti, već direktni potomci estetskih i političkih bitaka prošlih desetljeća.
+
+Svrha *Queer Icons Network* aplikacije je premostiti informacijski jaz i vizualizirati tu "nevidljivu nit". Aplikacija koristi interaktivni graf kako bi korisnik mogao uočiti kako se, primjerice, nasljeđe ballroom kulture 90-ih preslikava u današnji vizualni jezik pop glazbe, stvarajući obrazovni sustav koji stavlja naglasak na kolektivnu evoluciju identiteta.
 
 ---
 

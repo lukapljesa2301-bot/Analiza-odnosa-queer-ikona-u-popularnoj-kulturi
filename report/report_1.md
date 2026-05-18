@@ -42,6 +42,33 @@ Ovi izvori potvrđuju da je prelazak s teksta na graf (Graph-based navigation) n
 
 ---
 
+## Metodološko Proširenje i Analitički Okvir (Review Updates)
+
+Na temelju stručne recenzije, metodologija projekta proširena je kako bi uključila kvantitativne parametre koji omogućuju dublju razinu analize mrežnih struktura.
+
+### 1. Kriteriji Uključivanja (Selection Criteria)
+U ovoj fazi, 'Kvir Ikona' definira se kao povijesni ili suvremeni entitet koji ispunjava najmanje dva od tri sljedeća kriterija:
+- **Dokumentirani Dokumentacijski Utjecaj:** Izravni utjecaj na razvoj queer estetike (npr. camp, ballroom, androgini stil) potvrđen kroz kritičke osvrte.
+- **Aktivistički Kontinuitet:** Sudjelovanje u ključnim trenucima borbe za LGBTQ+ prava ili pružanje platforme marginaliziranim glasovima.
+- **Kulturni Prijenos (Cultural Legacy):** Dokaziva veza utjecaja na barem dva druga čvora u mreži, osiguravajući da graf ne sadrži izolirane 'otoke' bez konteksta.
+
+### 2. Vrednovanje Veza (Relationship Weighting)
+Veze između čvorova više nisu tretirane kao uniformne. Sustav sada implementira parametar `strength` (0.1 - 1.0):
+- **Visoki intenzitet (0.8 - 1.0):** Izravna suradnja (npr. Bowie i Mercury u "Under Pressure") ili mentorski odnos.
+- **Srednji intenzitet (0.4 - 0.7):** Jasna estetska inspiracija ili posveta u radu.
+- **Niski intenzitet (0.1 - 0.3):** Labava tematska povezanost ili povijesna suvremenost bez izravnog kontakta.
+*Vizualno, ovo je predstavljeno debljinom bridova u grafu.*
+
+### 3. Analiza Sentimenta Medijskog Izvještavanja
+Uveden je parametar `sentimentScore` (-1.0 do 1.0) koji simulira agregiranu analizu medijskog narativa o ikoni tijekom njezine karijere.
+- Čvorovi s visokim pozitivnim sentimentom (npr. Lady Gaga) emitiraju suptilan "halo" efekt u vizualizaciji.
+- Negativniji sentimenti (često povezani s povijesnim progonom, poput Oscara Wildea) tretiraju se kao točke povijesnog trenja.
+
+### 4. Temporalna Dimenzija (Decadal Mapping)
+Mreža je stratificirana prema desetljećima (`decade`). Ovo omogućuje analizu kako se "težište" queer ikone pomiče kroz vrijeme — od aktivističkih korijena 60-ih prema globalnoj pop dominaciji 2020-ih.
+
+---
+
 ## Metodologija (Method)
 
 Aplikacija je razvijena koristeći moderni full-stack pristup, s fokusom na modularnost i robusnost podataka.

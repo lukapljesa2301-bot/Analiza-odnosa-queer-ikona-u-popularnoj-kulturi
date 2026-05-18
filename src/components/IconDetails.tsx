@@ -31,27 +31,27 @@ const IconDetails: React.FC<Props> = ({ icon, onClose, allIcons, onSelectIcon })
           </button>
 
           <header className="mb-12">
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-rose-500 mb-3 block">
-              {icon.category}
+            <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-rose-500 mb-3 block">
+              Klasifikacija: {icon.category}
             </span>
-            <h2 className="text-5xl font-black text-white tracking-tighter leading-none mb-6 italic uppercase skew-x-[-4deg]">
+            <h2 className="text-5xl font-serif font-black text-white tracking-tight leading-none mb-6">
               {icon.name}
             </h2>
-            <div className="h-px w-16 bg-gradient-to-r from-rose-500 to-transparent" />
+            <div className="h-px w-24 bg-gradient-to-r from-rose-500 to-transparent" />
           </header>
 
           <section className="mb-12">
-            <h3 className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-500 mb-6 flex items-center gap-2">
-              <Sparkles className="w-3 h-3 text-rose-500" /> O Ikoni
+            <h3 className="text-[10px] uppercase tracking-[0.2em] font-mono font-bold text-zinc-500 mb-6 flex items-center gap-2">
+              <Sparkles className="w-3 h-3 text-rose-500" /> Biografska Bilješka
             </h3>
-            <div className="text-zinc-300 leading-relaxed space-y-4 text-base font-medium opacity-90">
+            <div className="text-zinc-300 leading-relaxed space-y-4 text-base font-normal opacity-90 font-serif">
               <ReactMarkdown>{icon.description}</ReactMarkdown>
             </div>
           </section>
 
           <section>
-            <h3 className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-500 mb-6 flex items-center gap-2">
-              <ExternalLink className="w-3 h-3 text-emerald-500" /> Kulturna Mreža
+            <h3 className="text-[10px] uppercase tracking-[0.2em] font-mono font-bold text-zinc-500 mb-6 flex items-center gap-2">
+              <ExternalLink className="w-3 h-3 text-emerald-500" /> Relacijske Veze
             </h3>
             <div className="space-y-4">
               {icon.connections.map((conn, idx) => {

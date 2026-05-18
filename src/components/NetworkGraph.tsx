@@ -39,7 +39,8 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
           links.push({
             source: icon.id,
             target: conn.targetId,
-            reason: conn.reason
+            reason: conn.reason,
+            strength: conn.strength || 0.5
           });
         }
       });
@@ -71,7 +72,6 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
       // Draw Links
       ctx.beginPath();
       ctx.strokeStyle = '#333';
-      ctx.lineWidth = 1 / transform.k;
       ctx.globalAlpha = 0.4;
       links.forEach(l => {
         const s = l.source as any;
@@ -82,11 +82,13 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
         const tIn = t.x >= xMin && t.x <= xMax && t.y >= yMin && t.y <= yMax;
         
         if (sIn || tIn) {
+          // Weighted links by strength
+          ctx.lineWidth = (l.strength * 3) / transform.k;
           ctx.moveTo(s.x, s.y);
           ctx.lineTo(t.x, t.y);
+          ctx.stroke();
         }
       });
-      ctx.stroke();
 
       // Draw Nodes
       nodes.forEach(n => {
@@ -97,6 +99,12 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
         const isHovered = hoveredNode?.id === n.id;
         const categoryColor = CATEGORY_COLORS[n.category] || '#444';
 
+        // Sentiment-aware glow
+        if (n.sentimentScore > 0.8) {
+          ctx.shadowColor = 'rgba(255,255,255,0.4)';
+          ctx.shadowBlur = 15;
+        }
+
         // Draw node circle
         ctx.beginPath();
         const baseRadius = 24;
@@ -105,6 +113,8 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
         ctx.fillStyle = categoryColor;
         ctx.fill();
         
+        ctx.shadowBlur = 0; // reset glow
+
         if (isSelected) {
           ctx.strokeStyle = '#fff';
           ctx.lineWidth = 3 / transform.k;
@@ -116,7 +126,7 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
         }
 
         // Draw text
-        ctx.font = `${600} ${11 / transform.k}px Inter, sans-serif`;
+        ctx.font = `${600} ${11 / transform.k}px JetBrains Mono, monospace`;
         ctx.fillStyle = isSelected ? '#fff' : '#fafafa';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
@@ -126,7 +136,9 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
         if (transform.k > 0.4 || isSelected) {
           ctx.shadowColor = 'rgba(0,0,0,0.8)';
           ctx.shadowBlur = 4;
-          ctx.fillText(n.name.toUpperCase(), n.x!, n.y! + radius + 10);
+          // Add decade to label for temporal context
+          const label = `${n.name.toUpperCase()} (${n.decade}s)`;
+          ctx.fillText(label, n.x!, n.y! + radius + 10);
         }
         
         ctx.shadowColor = 'transparent';

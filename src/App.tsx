@@ -39,10 +39,10 @@ export default function App() {
     <div className="fixed inset-0 bg-zinc-950 text-zinc-50 flex flex-col font-sans selection:bg-rose-500/30 overflow-hidden">
       {/* Background Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute inset-0 bg-[url('/src/assets/images/queer_icons_constellation_1779110309212.png')] bg-cover bg-center opacity-[0.15] mix-blend-screen" />
-        <div className="artistic-blur -top-24 -left-24 bg-purple-600" />
-        <div className="artistic-blur top-1/2 -right-24 bg-rose-500" />
-        <div className="artistic-blur -bottom-24 left-1/3 bg-indigo-600 w-[500px] h-[500px]" />
+        <div className="absolute inset-0 bg-[url('/src/assets/images/queer_genealogy_synthesis_1779112931728.png')] bg-cover bg-center opacity-[0.2] saturate-[0.8] brightness-75" />
+        <div className="artistic-blur -top-32 -left-32 bg-slate-700/40" />
+        <div className="artistic-blur top-1/2 -right-32 bg-indigo-900/30" />
+        <div className="artistic-blur -bottom-32 left-1/4 bg-blue-950/40 w-[600px] h-[600px]" />
       </div>
 
       {/* Header */}
@@ -51,17 +51,17 @@ export default function App() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="text-5xl md:text-6xl font-black tracking-tighter uppercase leading-none text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-rose-400 to-amber-300">
-            Kvir Ikonografija
+          <h1 className="text-5xl md:text-6xl font-serif font-black tracking-tight uppercase leading-none text-white drop-shadow-2xl">
+            Genealogija Kulture
           </h1>
-          <p className="text-zinc-400 mt-2 font-medium tracking-widest uppercase text-[10px] italic">
-            Mapa kulturnog utjecaja i međusobnih veza
+          <p className="text-zinc-500 mt-2 font-mono tracking-widest uppercase text-[10px] italic">
+            Mreža transgeneracijskih utjecaja i sjećanja
           </p>
         </motion.div>
 
-        <div className="hidden md:flex flex-col gap-1 items-end">
-          <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Zadnje ažuriranje</span>
-          <span className="text-sm font-mono text-zinc-300">2026 / Q3</span>
+        <div className="hidden md:flex flex-col gap-1 items-end font-mono">
+          <span className="text-[10px] text-zinc-600 uppercase tracking-widest font-bold">Arhiva Sustava</span>
+          <span className="text-sm text-zinc-400">v2.1 / 2026</span>
         </div>
       </header>
 

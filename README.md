@@ -1,6 +1,6 @@
 # Queer Icons Network
 
-![Queer Icons Network](./src/assets/images/queer_icons_collage_hero_1779108592651.png)
+![Queer Icons Network](./src/assets/images/queer_icons_elegant_hero_1779108780303.png)
 
 **Queer Icons Network** je interaktivna web aplikacija dizajnirana za istraživanje i vizualizaciju bogate povijesti i suvremenog utjecaja queer ikona u popularnoj kulturi. Koristeći naprednu mrežnu grafiku, aplikacija prikazuje kako su legende poput Marshe P. Johnson, Freddieja Mercuryja i Lady Gage međusobno povezane kroz inspiraciju, suradnju i zajedničku borbu za vidljivost.
 

@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;900&family=Anton&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Anton", sans-serif;
+}
+
+body {
+  background-color: #09090b; /* zinc-950 */
+  color: #fafafa; /* zinc-50 */
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+@layer components {
+  .artistic-blur {
+    @apply absolute w-96 h-96 rounded-full blur-[120px] pointer-events-none opacity-20;
+  }
+}

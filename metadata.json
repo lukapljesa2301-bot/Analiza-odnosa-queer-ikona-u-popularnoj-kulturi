@@ -1,0 +1,6 @@
+{
+  "name": "Queer Icons Network",
+  "description": "Interaktivni prikaz povezanosti queer ikona kroz povijest i suvremenu popularnu kulturu.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

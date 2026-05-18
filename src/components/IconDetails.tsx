@@ -57,7 +57,6 @@ const IconDetails: React.FC<Props> = ({ icon, onClose, allIcons, onSelectIcon })
               {icon.connections.map((conn, idx) => {
                 const target = allIcons.find(i => i.id === conn.targetId);
                 if (!target) return null;
-
                 return (
                   <button 
                     key={idx} 

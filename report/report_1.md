@@ -46,6 +46,28 @@ Ovi izvori potvrđuju da je prelazak s teksta na graf (Graph-based navigation) n
 
 Aplikacija je razvijena koristeći moderni full-stack pristup, s fokusom na modularnost i robusnost podataka.
 
+### Dijagram Toka Podataka (App Data Flow)
+
+```mermaid
+sequenceDiagram
+    participant U as Korisnik
+    participant F as Frontend (React/D3)
+    participant B as Backend (server.ts)
+    participant AI as Gemini AI
+    
+    U->>F: Pokretanje aplikacije / Interakcija
+    F->>F: Inicijalizacija d3-force simulacije
+    U->>F: Odabir čvora (Ikone)
+    F->>F: Prikaz relacijskih detalja
+    U->>F: Zahtjev za novom ikonom
+    F->>B: Proxying zahtjeva (POST /api/chat)
+    B->>AI: Generiranje strukturiranih podataka
+    AI-->>B: JSON (QueerIcon format)
+    B-->>F: Ažurirani skup podataka
+    F->>F: Rekalibracija grafa u realnom vremenu
+    F-->>U: Vizualna povratna informacija
+```
+
 ### 1. Tehnološki Stog (Tech Stack)
 - **Frontend:** React 18 s Vite sustavom za brzo renderiranje.
 - **Vizualizacija:** D3.js (Data-Driven Documents) za simulaciju sila (Force-based graph representation).

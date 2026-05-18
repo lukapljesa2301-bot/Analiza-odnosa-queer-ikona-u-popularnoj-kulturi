@@ -39,6 +39,7 @@ export default function App() {
     <div className="fixed inset-0 bg-zinc-950 text-zinc-50 flex flex-col font-sans selection:bg-rose-500/30 overflow-hidden">
       {/* Background Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute inset-0 bg-[url('/src/assets/images/queer_icons_constellation_1779110309212.png')] bg-cover bg-center opacity-[0.15] mix-blend-screen" />
         <div className="artistic-blur -top-24 -left-24 bg-purple-600" />
         <div className="artistic-blur top-1/2 -right-24 bg-rose-500" />
         <div className="artistic-blur -bottom-24 left-1/3 bg-indigo-600 w-[500px] h-[500px]" />

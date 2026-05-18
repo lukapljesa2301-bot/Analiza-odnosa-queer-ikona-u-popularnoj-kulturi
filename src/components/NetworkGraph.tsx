@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { QueerIcon, GraphNode, GraphLink } from '../types';
 import { CATEGORY_COLORS } from '../constants';
@@ -10,28 +10,31 @@ interface Props {
 }
 
 const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) => {
-  const svgRef = useRef<SVGSVGElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null);
 
   useEffect(() => {
-    if (!svgRef.current || !containerRef.current || !Array.isArray(icons) || icons.length === 0) return;
+    if (!canvasRef.current || !containerRef.current || !Array.isArray(icons) || icons.length === 0) return;
 
-    const width = containerRef.current.clientWidth;
-    const height = containerRef.current.clientHeight;
+    const container = containerRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    const svg = d3.select(svgRef.current);
-    svg.selectAll('*').remove();
+    // Handle high DPI screens
+    const dpr = window.devicePixelRatio || 1;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
 
-    const g = svg.append('g');
-
-    // Create unique list of nodes
+    // Create unique list of nodes and links
     const nodes: GraphNode[] = icons.map(icon => ({ ...icon }));
-    
-    // Create links
     const links: GraphLink[] = [];
     icons.forEach(icon => {
       icon.connections.forEach(conn => {
-        // Only link if target exists in our list
         if (icons.some(i => i.id === conn.targetId)) {
           links.push({
             source: icon.id,
@@ -42,101 +45,182 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
       });
     });
 
+    // Force simulation optimization:
+    // 1. theta(0.8) - Barnes-Hut optimization for ManyBody force
+    // 2. distanceMax(500) - Limits calculation to nearby nodes to maintain O(N) rather than O(N^2) for distant interactions
     const simulation = d3.forceSimulation<GraphNode>(nodes)
-      .force('link', d3.forceLink<GraphNode, GraphLink>(links).id(d => d.id).distance(150))
-      .force('charge', d3.forceManyBody().strength(-300))
+      .force('link', d3.forceLink<GraphNode, GraphLink>(links).id(d => d.id).distance(180))
+      .force('charge', d3.forceManyBody().strength(-400).theta(0.8).distanceMax(600))
       .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('collision', d3.forceCollide().radius(60));
+      .force('collision', d3.forceCollide().radius(65));
 
-    const link = g.append('g')
-      .attr('stroke', '#444')
-      .attr('stroke-opacity', 0.6)
-      .selectAll('line')
-      .data(links)
-      .join('line')
-      .attr('stroke-width', 2);
+    let transform = d3.zoomIdentity;
 
-    const node = g.append('g')
-      .selectAll('.node')
-      .data(nodes)
-      .join('g')
-      .attr('class', 'node')
-      .style('cursor', 'pointer')
-      .call(d3.drag<SVGGElement, GraphNode>()
-        .on('start', dragstarted)
-        .on('drag', dragged)
-        .on('end', dragended))
-      .on('click', (event, d) => {
-        const icon = icons.find(i => i.id === d.id);
-        if (icon) onSelectIcon(icon);
+    const render = () => {
+      ctx.save();
+      ctx.clearRect(0, 0, width, height);
+      ctx.translate(transform.x, transform.y);
+      ctx.scale(transform.k, transform.k);
+
+      // Viewport Culling Bounds (Data Space)
+      const xMin = -transform.x / transform.k - 100;
+      const xMax = (width - transform.x) / transform.k + 100;
+      const yMin = -transform.y / transform.k - 100;
+      const yMax = (height - transform.y) / transform.k + 100;
+
+      // Draw Links
+      ctx.beginPath();
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 1 / transform.k;
+      ctx.globalAlpha = 0.4;
+      links.forEach(l => {
+        const s = l.source as any;
+        const t = l.target as any;
+        
+        // Culling: only draw if either endpoint is in or near viewport
+        const sIn = s.x >= xMin && s.x <= xMax && s.y >= yMin && s.y <= yMax;
+        const tIn = t.x >= xMin && t.x <= xMax && t.y >= yMin && t.y <= yMax;
+        
+        if (sIn || tIn) {
+          ctx.moveTo(s.x, s.y);
+          ctx.lineTo(t.x, t.y);
+        }
+      });
+      ctx.stroke();
+
+      // Draw Nodes
+      nodes.forEach(n => {
+        const isVisible = n.x! >= xMin && n.x! <= xMax && n.y! >= yMin && n.y! <= yMax;
+        if (!isVisible) return;
+
+        const isSelected = n.id === selectedIconId;
+        const isHovered = hoveredNode?.id === n.id;
+        const categoryColor = CATEGORY_COLORS[n.category] || '#444';
+
+        // Draw node circle
+        ctx.beginPath();
+        const baseRadius = 24;
+        const radius = (isSelected || isHovered) ? baseRadius * 1.1 : baseRadius;
+        ctx.arc(n.x!, n.y!, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = categoryColor;
+        ctx.fill();
+        
+        if (isSelected) {
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 3 / transform.k;
+          ctx.stroke();
+        } else {
+          ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+          ctx.lineWidth = 1 / transform.k;
+          ctx.stroke();
+        }
+
+        // Draw text
+        ctx.font = `${600} ${11 / transform.k}px Inter, sans-serif`;
+        ctx.fillStyle = isSelected ? '#fff' : '#fafafa';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.globalAlpha = 1;
+        
+        // Only draw labels if zoomed in enough for readability
+        if (transform.k > 0.4 || isSelected) {
+          ctx.shadowColor = 'rgba(0,0,0,0.8)';
+          ctx.shadowBlur = 4;
+          ctx.fillText(n.name.toUpperCase(), n.x!, n.y! + radius + 10);
+        }
+        
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
       });
 
-    // Category colors mapped to the Artistic Flair theme
-    const themeColors = Object.values(CATEGORY_COLORS);
-    const categories = Object.keys(CATEGORY_COLORS);
-    const colorScale = d3.scaleOrdinal(themeColors).domain(categories);
+      ctx.restore();
+    };
 
-    node.append('circle')
-      .attr('r', 25)
-      .attr('fill', d => colorScale(d.category) as string)
-      .attr('stroke', d => d.id === selectedIconId ? '#fff' : 'rgba(255,255,255,0.1)')
-      .attr('stroke-width', d => d.id === selectedIconId ? 3 : 1)
-      .attr('class', 'transition-all duration-300 hover:scale-110');
+    simulation.on('tick', render);
 
-    node.append('text')
-      .text(d => d.name)
-      .attr('dy', 40)
-      .attr('text-anchor', 'middle')
-      .attr('fill', '#fafafa')
-      .style('font-size', '11px')
-      .style('font-weight', '600')
-      .style('letter-spacing', '0.05em')
-      .style('text-transform', 'uppercase')
-      .style('pointer-events', 'none')
-      .style('text-shadow', '0 2px 4px rgba(0,0,0,0.8)');
-
-    simulation.on('tick', () => {
-      link
-        .attr('x1', d => (d.source as any).x)
-        .attr('y1', d => (d.source as any).y)
-        .attr('x2', d => (d.target as any).x)
-        .attr('y2', d => (d.target as any).y);
-
-      node
-        .attr('transform', d => `translate(${d.x},${d.y})`);
-    });
-
-    // Zoom behavior
-    const zoom = d3.zoom<SVGSVGElement, unknown>()
+    // Zoom setup
+    const zoomBehavior = d3.zoom<HTMLCanvasElement, unknown>()
       .scaleExtent([0.1, 4])
       .on('zoom', (event) => {
-        g.attr('transform', event.transform);
+        transform = event.transform;
+        render();
       });
 
-    svg.call(zoom);
+    d3.select(canvas).call(zoomBehavior);
 
-    function dragstarted(event: any, d: any) {
-      if (!event.active) simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
-    }
+    // Mouse movement/click handling
+    const handleMouseMove = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = event.clientX - rect.left;
+      const mouseY = event.clientY - rect.top;
+      
+      // Transform mouse coordinates back to data space
+      const dataX = (mouseX - transform.x) / transform.k;
+      const dataY = (mouseY - transform.y) / transform.k;
+      
+      // simulation.find uses spatial partitioning (quadtree) internally
+      const found = simulation.find(dataX, dataY, 30);
+      if (found !== hoveredNode) {
+        // We set it in a way that doesn't trigger simulation tick if possible
+        // but for simplicity we use state
+        setHoveredNode(found || null);
+        render();
+      }
+      
+      canvas.style.cursor = found ? 'pointer' : 'grab';
+    };
 
-    function dragged(event: any, d: any) {
-      d.fx = event.x;
-      d.fy = event.y;
-    }
+    const handleClick = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = event.clientX - rect.left;
+      const mouseY = event.clientY - rect.top;
+      const dataX = (mouseX - transform.x) / transform.k;
+      const dataY = (mouseY - transform.y) / transform.k;
+      
+      const found = simulation.find(dataX, dataY, 30);
+      if (found) {
+        onSelectIcon(found as QueerIcon);
+      }
+    };
 
-    function dragended(event: any, d: any) {
-      if (!event.active) simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-    }
+    // Drag behavior for Canvas
+    const dragBehavior = d3.drag<HTMLCanvasElement, unknown>()
+      .subject((event) => {
+        const dataX = (event.x - transform.x) / transform.k;
+        const dataY = (event.y - transform.y) / transform.k;
+        return simulation.find(dataX, dataY, 40);
+      })
+      .on('start', (event) => {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        event.subject.fx = event.subject.x;
+        event.subject.fy = event.subject.y;
+      })
+      .on('drag', (event) => {
+        // Drag coordinates need adjustment for current zoom/pan
+        event.subject.fx = (event.x - transform.x) / transform.k;
+        event.subject.fy = (event.y - transform.y) / transform.k;
+      })
+      .on('end', (event) => {
+        if (!event.active) simulation.alphaTarget(0);
+        event.subject.fx = null;
+        event.subject.fy = null;
+      });
 
-  }, [icons, onSelectIcon, selectedIconId]);
+    d3.select(canvas).call(dragBehavior as any);
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('click', handleClick);
+
+    return () => {
+      simulation.stop();
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('click', handleClick);
+    };
+
+  }, [icons, onSelectIcon, selectedIconId, hoveredNode]);
 
   return (
     <div ref={containerRef} className="w-full h-full bg-transparent relative overflow-hidden">
-      <svg ref={svgRef} className="w-full h-full" />
+      <canvas ref={canvasRef} className="w-full h-full block" />
       <footer className="absolute bottom-0 left-0 w-full p-6 bg-zinc-900/50 border-t border-zinc-800 flex justify-between items-center z-10 backdrop-blur-md">
         <div className="flex gap-8 items-center overflow-x-auto no-scrollbar">
           {Object.entries(CATEGORY_COLORS).map(([cat, color]) => (
@@ -160,3 +244,4 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
 };
 
 export default NetworkGraph;
+

@@ -1,0 +1,35 @@
+{
+  "entities": {
+    "icon": {
+      "title": "Queer Icon",
+      "description": "A representation of a queer icon with their connections.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string", "enum": ["Music", "Activism", "Drag", "Art", "Film/TV"] },
+        "description": { "type": "string" },
+        "connections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "targetId": { "type": "string" },
+              "reason": { "type": "string" }
+            },
+            "required": ["targetId", "reason"]
+          }
+        },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "category", "description", "connections", "createdBy", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/icons/{iconId}": {
+      "schema": "icon",
+      "description": "User-contributed icons for the network."
+    }
+  }
+}

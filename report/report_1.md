@@ -22,6 +22,26 @@ Svrha *Queer Icons Network* aplikacije je premostiti informacijski jaz i vizuali
 
 ---
 
+## Analiza Teme: Digitalna Mapiranja i Transgeneracijski Prijenos Queer Kulturne Memorije
+
+Središnja tema projekta *Queer Icons Network* temelji se na konceptu interaktivne genealogije — vizualizaciji koja nadilazi statične biografije i fokusira se na "živu" mrežu utjecaja. U kontekstu digitalne humanistike, ovakav pristup prepoznaje da su queer povijesti inherentno relacijske, često građene u prostorima otpora gdje su informacije kolale kroz neformalne mreže, a ne kroz službene institucije.
+
+### 1. Vizualizacija "Skrivene Povijesti" (Hidden Histories)
+Prema istraživanjima platforme *OutHistory*, digitalni arhivi igraju ključnu ulogu u rekonstrukciji identiteta koji su bili sustavno marginalizirani. Projekt se oslanja na ideju da čvorovi (ikone) nisu samo izolirane figure, već "sjecišta" (intersections) povijesnih prekretnica. Primjerice, povezivanje Marsha P. Johnson s modernim drag pokretom nije samo estetsko pitanje, već politička linija koja prati evoluciju prava transrodnih osoba od pobune u Stonewallu do današnjih mainstream medija.
+
+### 2. Prostorna i Relacijska Inteligencija
+Inspiriran projektima poput *Mapping the Gay Guides*, ovaj izvještaj ističe važnost vizualizacije protoka informacija. Mapiranje mreža queer ikona omogućuje korisnicima da vide "obiteljska stabla" inspiracije. Dok su tradicionalni arhivi često čuvali podatke u linearnim ladicama, *Queer Icons Network* koristi mrežni graf kako bi prikazao nelinearnu prirodu queer utjecaja — gdje umjetnik iz 1920-ih može izravno utjecati na pop zvijezdu iz 2020-ih, zaobilazeći desetljeća tišine.
+
+### 3. Glavni Izvori i Digitalni Kolaboratoriji
+U procesu istraživanja teme, identificirani su ključni digitalni resursi koji služe kao temelj za razumijevanje ove kompleksne mreže:
+- **OutHistory.org:** Jedan od najstarijih i najvažnijih digitalnih repozitorija queer povijesti koji zagovara participativni model arhiviranja.
+- **Mapping the Gay Guides:** Projekt koji koristi podatke iz povijesnih turističkih vodiča za queer osobe kako bi vizualizirao geografsku i socijalnu rasprostranjenost zajednice, što je metodološki slično našoj mreži ikona.
+- **LGBTQ Digital Collaboratory:** Institucija koja istražuje kako digitalni alati mogu pomoći u očuvanju queer povijesti na transnacionalnoj razini, naglašavajući važnost tehničke infrastrukture u očuvanju efemernih povijesti.
+
+Ovi izvori potvrđuju da je prelazak s teksta na graf (Graph-based navigation) nužan korak za suvremeno razumijevanje kulturnog nasljeđa, jer omogućuje promatraču da postane aktivan istraživač, a ne samo pasivni čitatelj.
+
+---
+
 ## Metodologija (Method)
 
 Aplikacija je razvijena koristeći moderni full-stack pristup, s fokusom na modularnost i robusnost podataka.
@@ -70,6 +90,9 @@ Dizajn "Artistic Flair" dodatno poboljšava korisničko iskustvo (UX) koristeći
 
 - Bostock, M. (2024). *D3.js: Data-Driven Documents*. 
 - Google AI Support. (2025). *Gemini API Documentation and Model Capabilities*.
+- LGBTQ Digital Collaboratory. (2026). *Digital Research and Preservation of Queer Histories*.
+- Mapping the Gay Guides. (2024). *Spatializing Queer History through Digital Mapping*.
 - NotebookLM. (2024). *Summarization and Relationship Mapping in Cultural Research*.
+- OutHistory.org. (2026). *Digital Archive for LGBTQ History*.
 - Tailwind Labs. (2026). *Utility-First CSS Framework and Design Systems*.
 - Tufte, E. R. (2001). *The Visual Display of Quantitative Information*.

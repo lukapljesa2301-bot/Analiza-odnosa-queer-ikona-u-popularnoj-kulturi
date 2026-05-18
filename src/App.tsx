@@ -89,6 +89,7 @@ export default function App() {
         icon={selectedIcon} 
         onClose={() => setSelectedIcon(null)} 
         allIcons={icons}
+        onSelectIcon={setSelectedIcon}
       />
 
       {/* Footer Info */}

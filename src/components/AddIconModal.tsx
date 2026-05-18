@@ -5,6 +5,7 @@ import { QueerIcon } from '../types';
 import { db, auth } from '../lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { handleFirestoreError, OperationType } from '../lib/utils';
+import { CATEGORY_COLORS } from '../constants';
 
 interface Props {
   isOpen: boolean;
@@ -104,11 +105,9 @@ const AddIconModal: React.FC<Props> = ({ isOpen, onClose, existingIcons, onIconA
                   onChange={e => setCategory(e.target.value as any)}
                   className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:border-rose-500 outline-none transition-colors appearance-none"
                 >
-                  <option value="Music">Music</option>
-                  <option value="Activism">Activism</option>
-                  <option value="Drag">Drag</option>
-                  <option value="Art">Art</option>
-                  <option value="Film/TV">Film/TV</option>
+                  {Object.keys(CATEGORY_COLORS).map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
                 </select>
               </div>
 

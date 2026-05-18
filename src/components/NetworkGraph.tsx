@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { QueerIcon, GraphNode, GraphLink } from '../types';
+import { CATEGORY_COLORS } from '../constants';
 
 interface Props {
   icons: QueerIcon[];
@@ -71,8 +72,8 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
       });
 
     // Category colors mapped to the Artistic Flair theme
-    const categories = ['Music', 'Activism', 'Drag', 'Art', 'Film/TV'];
-    const themeColors = ['#ec4899', '#f59e0b', '#a855f7', '#10b981', '#0ea5e9']; // rose, amber, purple, emerald, sky
+    const themeColors = Object.values(CATEGORY_COLORS);
+    const categories = Object.keys(CATEGORY_COLORS);
     const colorScale = d3.scaleOrdinal(themeColors).domain(categories);
 
     node.append('circle')
@@ -138,13 +139,7 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
       <svg ref={svgRef} className="w-full h-full" />
       <footer className="absolute bottom-0 left-0 w-full p-6 bg-zinc-900/50 border-t border-zinc-800 flex justify-between items-center z-10 backdrop-blur-md">
         <div className="flex gap-8 items-center overflow-x-auto no-scrollbar">
-          {[
-            { cat: 'Music', color: '#ec4899' },
-            { cat: 'Activism', color: '#f59e0b' },
-            { cat: 'Drag', color: '#a855f7' },
-            { cat: 'Art', color: '#10b981' },
-            { cat: 'Film/TV', color: '#0ea5e9' }
-          ].map(({ cat, color }) => (
+          {Object.entries(CATEGORY_COLORS).map(([cat, color]) => (
             <div key={cat} className="flex items-center gap-2 shrink-0">
               <div 
                 className="w-2.5 h-2.5 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]" 

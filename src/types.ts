@@ -1,7 +1,7 @@
 export interface QueerIcon {
   id: string;
   name: string;
-  category: "Music" | "Activism" | "Drag" | "Art" | "Film/TV";
+  category: "Music" | "Activism" | "Drag" | "Art" | "Film/TV" | "Literature & Theory" | "Performance Art";
   description: string;
   decade: number; // e.g. 1960, 1970, 2010
   sentimentScore: number; // -1 to 1 (media portrayal analysis)

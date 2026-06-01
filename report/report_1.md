@@ -42,15 +42,15 @@ Ovi izvori potvrđuju da je prelazak s teksta na graf (Graph-based navigation) n
 
 ---
 
-## Metodološko Proširenje i Analitički Okvir (Review Updates)
+## Metodološko i Teorijsko Proširenje (Review Updates & Literature Alignment)
 
-Na temelju stručne recenzije, metodologija projekta proširena je kako bi uključila kvantitativne parametre koji omogućuju dublju razinu analize mrežnih struktura.
+Na temelju stručne recenzije i analize relevantne znanstvene literature (Parahoo, 2020; Hawkins, 2016; Isherwood, 2023; Sontag, 1964; Spargo, 1999), metodološki okvir i mrežna struktura *Queer Icons Network* prošireni su kako bi odgovorili na složena relacijska pitanja:
 
-### 1. Kriteriji Uključivanja (Selection Criteria)
+### 1. Kriteriji Uključivanja (Selection Criteria) i "Bivanje nasuprot Izvedbe"
 U ovoj fazi, 'Kvir Ikona' definira se kao povijesni ili suvremeni entitet koji ispunjava najmanje dva od tri sljedeća kriterija:
-- **Dokumentirani Dokumentacijski Utjecaj:** Izravni utjecaj na razvoj queer estetike (npr. camp, ballroom, androgini stil) potvrđen kroz kritičke osvrte.
-- **Aktivistički Kontinuitet:** Sudjelovanje u ključnim trenucima borbe za LGBTQ+ prava ili pružanje platforme marginaliziranim glasovima.
-- **Kulturni Prijenos (Cultural Legacy):** Dokaziva veza utjecaja na barem dva druga čvora u mreži, osiguravajući da graf ne sadrži izolirane 'otoke' bez konteksta.
+- **Utemeljenje u estetskoj teoriji:** Prema Parahoo (2020), popularna kultura često upada u zamku pretvaranja kvirnosti u spektakl bez dubljeg uvažavanja identiteta, što se očituje kroz *queerbaiting* (npr. mainstream proizvodi Katy Perry, Rita Ora, ili Ariana Grande dizajnirani za muški pogled i ružičasti kapitalizam). Nasuprot tome, autentični "Queer Pop" (npr. Hayley Kiyoko, Lil Nas X, Sam Smith) funkcionira kao prostor življenog dvoličja i stvarnog otpora. Ikone su birane na temelju njihove sposobnosti da nadiđu puku scensku komodifikaciju.
+- **Pedagogija Dezidentifikacije (Pedagogy of Disidentification):** Prema Isherwoodu (2023), oslonjenom na teorijski rad Joséa Estebana Muñoza (1999), kvir umjetnost stvara "estetsku dimenziju" koja funkcionira kao utočište otpora. Umjetnici poput Félixa González-Torresa (kroz minimalističke bombone i satove) ili Zoe Leonard (kroz dirljivo i taktilno zašivene voćne kore u djelu 'Strange Fruit') koriste oskudne, svakodnevne materijale kako bi dezidentificirali normativno znanje i otvorili prostore nade i žalovanja.
+- **Kulturni Prijenos (Cultural Legacy):** Dokaziva veza utjecaja na barem dva druga čvora u mreži, osiguravajući da graf ne sadrži izolirane 'otoke' bez konteksta. "Kvir energija" (pojam koji je uvela Eve Kosofsky Sedgwick, 1994) definira hranjivu, životodajnu estetsku silu kulturnih objekata koja omogućuje marginaliziranim subjektima preživljavanje i otpor unutar neprijateljskih društvenih sustava.
 
 ### 2. Vrednovanje Veza (Relationship Weighting)
 Veze između čvorova više nisu tretirane kao uniformne. Sustav sada implementira parametar `strength` (0.1 - 1.0):
@@ -59,12 +59,18 @@ Veze između čvorova više nisu tretirane kao uniformne. Sustav sada implementi
 - **Niski intenzitet (0.1 - 0.3):** Labava tematska povezanost ili povijesna suvremenost bez izravnog kontakta.
 *Vizualno, ovo je predstavljeno debljinom bridova u grafu.*
 
-### 3. Analiza Sentimenta Medijskog Izvještavanja
+### 3. Analiza Sentimenta Medijskog Izvještavanja (Media Portrayal Analysis)
 Uveden je parametar `sentimentScore` (-1.0 do 1.0) koji simulira agregiranu analizu medijskog narativa o ikoni tijekom njezine karijere.
 - Čvorovi s visokim pozitivnim sentimentom (npr. Lady Gaga) emitiraju suptilan "halo" efekt u vizualizaciji.
 - Negativniji sentimenti (često povezani s povijesnim progonom, poput Oscara Wildea) tretiraju se kao točke povijesnog trenja.
 
-### 4. Temporalna Dimenzija (Decadal Mapping)
+### 4. Camp i Estetika Artificijelnosti (The Camp Sensibility)
+Inicirano kultnim esejem Susan Sontag (1964) "Notes on 'Camp'", prepoznajemo da je camp trijumf androgine i ekstravagantne stilizacije nad pukom funkcionalnošću. U mrežnom grafu, camp se mapira kao zasebna estetska nit koja povezuje Oscara Wildea, rani dreg RuPaula, svestranu kazališnu androgiju Boy Georgea, te dreg estetiku modernog queer hip-hopa opisanog kroz Le1f-a i Mykki Blanco (Hawkins, 2016).
+
+### 5. Kvir Genealogija i Moć (Foucauldian Power Systems)
+Inspiriran historizacijom seksualnosti Michela Foucaulta (Spargo, 1999), projekt mapira genealogiju diskursa moći i otpora. Umjesto traženja fiksnih, bioloških identiteta, Foucault nas uči da je seksualnost povijesno strukturirana kroz institucije i "tehnologije seksa", stvarajući pritom protu-diskurse (*reverse discourse*) kroz koje subjekti govore u svoje ime (npr. dirljiva borba i cottaging estetika u George Michaelovoj pjesmi 'Outside' nakon medijskog progona).
+
+### 6. Temporalna Dimenzija (Decadal Mapping)
 Mreža je stratificirana prema desetljećima (`decade`). Ovo omogućuje analizu kako se "težište" queer ikone pomiče kroz vrijeme — od aktivističkih korijena 60-ih prema globalnoj pop dominaciji 2020-ih.
 
 ---
@@ -139,9 +145,14 @@ Dizajn "Artistic Flair" dodatno poboljšava korisničko iskustvo (UX) koristeći
 
 - Bostock, M. (2024). *D3.js: Data-Driven Documents*. 
 - Google AI Support. (2025). *Gemini API Documentation and Model Capabilities*.
+- Hawkins, S. (2016). *Queerness in Pop Music: Aesthetics, Gender Norms, and Temporality*. Routledge.
+- Isherwood, M. (2023). *Towards a Pedagogy of Disidentification: Fusing Aesthetic Theory with Queer Theory*. Journal of Queer Studies & Visual Arts.
 - LGBTQ Digital Collaboratory. (2026). *Digital Research and Preservation of Queer Histories*.
 - Mapping the Gay Guides. (2024). *Spatializing Queer History through Digital Mapping*.
 - NotebookLM. (2024). *Summarization and Relationship Mapping in Cultural Research*.
 - OutHistory.org. (2026). *Digital Archive for LGBTQ History*.
+- Parahoo, R. (2020). *Exploring Being Queer and Performing Queerness in Popular Music*. Media, Culture & Society.
+- Sontag, S. (1964). *Notes on 'Camp'*. Partisan Review.
+- Spargo, T. (1999). *Foucault and Queer Theory*. Icon Books.
 - Tailwind Labs. (2026). *Utility-First CSS Framework and Design Systems*.
 - Tufte, E. R. (2001). *The Visual Display of Quantitative Information*.

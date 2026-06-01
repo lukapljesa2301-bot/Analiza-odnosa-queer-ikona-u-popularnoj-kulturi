@@ -101,29 +101,71 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
 
         // Sentiment-aware glow
         if (n.sentimentScore > 0.8) {
-          ctx.shadowColor = 'rgba(255,255,255,0.4)';
-          ctx.shadowBlur = 15;
+          ctx.shadowColor = categoryColor;
+          ctx.shadowBlur = 20;
         }
 
-        // Draw node circle
-        ctx.beginPath();
         const baseRadius = 24;
-        const radius = (isSelected || isHovered) ? baseRadius * 1.1 : baseRadius;
+        const radius = (isSelected || isHovered) ? baseRadius * 1.15 : baseRadius;
+
+        // Draw Outer Orbit Ring (decorative galaxy/system style)
+        ctx.beginPath();
+        ctx.arc(n.x!, n.y!, radius + 6, 0, 2 * Math.PI);
+        ctx.strokeStyle = isSelected ? 'rgba(255,255,255,0.8)' : `${categoryColor}44`;
+        ctx.lineWidth = 1 / transform.k;
+        ctx.setLineDash([2, 3]);
+        ctx.stroke();
+        ctx.setLineDash([]); // Reset line dash
+
+        // Draw node circle with radial gloss gradient
+        ctx.beginPath();
         ctx.arc(n.x!, n.y!, radius, 0, 2 * Math.PI);
-        ctx.fillStyle = categoryColor;
+        
+        const grad = ctx.createRadialGradient(
+          n.x! - radius * 0.25, 
+          n.y! - radius * 0.25, 
+          2, 
+          n.x!, 
+          n.y!, 
+          radius
+        );
+        grad.addColorStop(0, '#ffffff');
+        grad.addColorStop(0.3, categoryColor);
+        grad.addColorStop(1, '#111111');
+        
+        ctx.fillStyle = grad;
         ctx.fill();
         
         ctx.shadowBlur = 0; // reset glow
 
+        // Stroke (Selected / Hovered focus)
+        ctx.beginPath();
+        ctx.arc(n.x!, n.y!, radius, 0, 2 * Math.PI);
         if (isSelected) {
           ctx.strokeStyle = '#fff';
           ctx.lineWidth = 3 / transform.k;
           ctx.stroke();
+        } else if (isHovered) {
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 1.5 / transform.k;
+          ctx.stroke();
         } else {
-          ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+          ctx.strokeStyle = 'rgba(255,255,255,0.25)';
           ctx.lineWidth = 1 / transform.k;
           ctx.stroke();
         }
+
+        // Draw initials inside circle for high-fidelity archival feel
+        const nameParts = n.name.split(' ');
+        const initials = nameParts.length >= 2 
+          ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+          : n.name.slice(0, 2).toUpperCase();
+
+        ctx.font = 'bold 10px JetBrains Mono, monospace';
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(initials, n.x!, n.y!);
 
         // Draw text
         ctx.font = `${600} ${11 / transform.k}px JetBrains Mono, monospace`;

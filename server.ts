@@ -259,6 +259,117 @@ async function startServer() {
         ]
       },
       {
+        id: "cher",
+        name: "Cher",
+        category: "Music",
+        description: "Vječna božica popa i kultna LGBTQ+ ikona čiji je hit 'Believe' redefinirao klupsku scenu, a dugogodišnje savezništvo i podrška transrodnom sinu Chazu Bonu učvrstili su njezin obiteljski i društveni utjecaj.",
+        decade: 1980,
+        sentimentScore: 0.98,
+        connections: [
+          { targetId: "lady-gaga", reason: "Zajednički glamurozni camp senzibilitet i međusobno divljenje.", strength: 0.9 },
+          { targetId: "diana-ross", reason: "Sjajne pop dive 70-ih i 80-ih sa sličnim utjecajem na modu.", strength: 0.85 },
+          { targetId: "kylie-minogue", reason: "Dijele krunu klupskih i pop himni namijenjenih plesnim podijima.", strength: 0.8 }
+        ]
+      },
+      {
+        id: "kylie-minogue",
+        name: "Kylie Minogue",
+        category: "Music",
+        description: "Australska pop princeza visoko cijenjena u queer kulturi zbog camp estetike te dugogodišnjeg savezništva i klupskih himni poput 'All the Lovers'.",
+        decade: 2000,
+        sentimentScore: 0.95,
+        connections: [
+          { targetId: "lady-gaga", reason: "Obostrano priznanje i status klupskih ikona.", strength: 0.8 },
+          { targetId: "cher", reason: "Pop dive sa snažnim camp senzibilitetom.", strength: 0.85 },
+          { targetId: "scissor-sisters", reason: "Kreativna bliskost i zajednički klupski nastupi.", strength: 0.8 }
+        ]
+      },
+      {
+        id: "george-michael",
+        name: "George Michael",
+        category: "Music",
+        description: "Pop superzvijezda koja je nakon javnog autanja prkosno slavila svoju seksualnost kroz hitove poput 'Outside', redefinirajući queer vidljivost u popularnoj kulturi.",
+        decade: 1980,
+        sentimentScore: 0.92,
+        connections: [
+          { targetId: "elton-john", reason: "Legendarna suradnja, blisko prijateljstvo i zajednička borba protiv AIDS-a.", strength: 0.95 },
+          { targetId: "boy-george", reason: "Suvremenici britanske pop scene 80-ih.", strength: 0.8 },
+          { targetId: "sylvester", reason: "Glazbeni utjecaj rane plesne klupske i disko elektronike.", strength: 0.75 }
+        ]
+      },
+      {
+        id: "cyndi-lauper",
+        name: "Cyndi Lauper",
+        category: "Music",
+        description: "Pop pjevačica i vatrena aktivistica koja je svojom himnom 'Girls Just Want to Have Fun' i True Colors zakladom pružila utočište i spas za queer mladež.",
+        decade: 1980,
+        sentimentScore: 0.97,
+        connections: [
+          { targetId: "madonna", reason: "Kreativne kraljice popa 80-ih, obje ikone queer oslobođenja.", strength: 0.85 },
+          { targetId: "lady-gaga", reason: "Zajednički rad u MAC Viva Glam kampanji za podizanje svijesti o HIV-u.", strength: 0.9 }
+        ]
+      },
+      {
+        id: "sophie",
+        name: "SOPHIE",
+        category: "Music",
+        description: "Eksperimentalna producentica i pop vizionarka koja je redefinirala sintetički pop zvuk i istraživala transrodnost kroz hiper-kinetičke zvučne skulpture.",
+        decade: 2010,
+        sentimentScore: 0.96,
+        connections: [
+          { targetId: "david-bowie", reason: "Pionirsko pomicanje granica zvučnog i rodnog eksperimenta.", strength: 0.75 },
+          { targetId: "lady-gaga", reason: "Izvanredan utjecaj na modernu avantgardnu elektroničku pop estetiku.", strength: 0.8 }
+        ]
+      },
+      {
+        id: "diana-ross",
+        name: "Diana Ross",
+        category: "Music",
+        description: "Predvodnica The Supremesa i solo diva čiji je disko hit 'I'm Coming Out' postao najčuvenija himna oslobođenja i ponosa.",
+        decade: 1970,
+        sentimentScore: 0.92,
+        connections: [
+          { targetId: "sylvester", reason: "Zajedničko oblikovanje zlatne ere disko glazbe.", strength: 0.8 },
+          { targetId: "cher", reason: "Legendarna televizijska suradnja i status velikih pop diva 70-ih.", strength: 0.85 }
+        ]
+      },
+      {
+        id: "judy-garland",
+        name: "Judy Garland",
+        category: "Music",
+        description: "Glumačka i glazbena legenda čiji je tragičan život i kultna izvedba u 'Čarobnjaku iz Oza' stvorila frazu 'Dorothyjin prijatelj' kao rani tajni identifikator za queer osobe.",
+        decade: 1950,
+        sentimentScore: 0.94,
+        connections: [
+          { targetId: "marsha-p-johnson", reason: "Smrt Garland tjedan dana ranije povijesno se povezuje s nabojem večeri Stonewall pobune.", strength: 0.85 },
+          { targetId: "elton-john", reason: "Temeljna inspiracija za teatralnost i emotivnu izvedbu u popularnoj glazbi.", strength: 0.8 }
+        ]
+      },
+      {
+        id: "donna-summer",
+        name: "Donna Summer",
+        category: "Music",
+        description: "Kraljica disko ritmova čija je suradnja u 'I Feel Love' s Giorgiom Moroderom stvorila temelje modernog klupskog zvuka i queer plesnog utočišta.",
+        decade: 1970,
+        sentimentScore: 0.91,
+        connections: [
+          { targetId: "sylvester", reason: "Zajednički vladari visokoenergetske klupske i disco scene u San Franciscu.", strength: 0.9 },
+          { targetId: "diana-ross", reason: "Kreativna konkurencija na disco tronu i ikone rane klupske supkulture.", strength: 0.8 }
+        ]
+      },
+      {
+        id: "scissor-sisters",
+        name: "Scissor Sisters",
+        category: "Music",
+        description: "Pop-rock i glam-dance sastav poznat po camp teatralnosti i hitovima koji slave queer klupsku scenu New Yorka.",
+        decade: 2000,
+        sentimentScore: 0.93,
+        connections: [
+          { targetId: "kylie-minogue", reason: "Raznovrsna suradnja i zajednički klupski nastupi.", strength: 0.8 },
+          { targetId: "elton-john", reason: "Blisko prijateljstvo i zajedničko pisanje hitova poput 'I Don't Feel Like Dancin'.", strength: 0.95 }
+        ]
+      },
+      {
         id: "felix-gonzalez-torres",
         name: "Félix González-Torres",
         category: "Art",
@@ -469,7 +580,7 @@ async function startServer() {
       try {
         const response = await ai.models.generateContent({
           model: "gemini-3-flash-preview",
-          contents: "Generate a list of exactly 30 diverse queer icons, ensuring that Lady Gaga (id: 'lady-gaga', category: 'Music') is absolutely included on the list. For each icon provide: 'id', 'name', 'category' (strictly one of: 'Music', 'Activism', 'Drag', 'Art', 'Film/TV', 'Literature & Theory', 'Performance Art'), 'description' (in Croatian), 'decade' (integer, e.g. 1960), 'sentimentScore' (float -1.0 to 1.0 representing media perception), and 'connections' (array of {targetId, reason, strength: float 0.1-1.0}). Ensure clear criteria for inclusion: icons must have a documented impact on queer cultural heritage. Ensure all connection targetIds point only to other icons present in the return list. Output valid JSON.",
+          contents: "Generate a list of exactly 50 diverse queer icons. Ensure that Cher (id: 'cher', category: 'Music'), Kylie Minogue (id: 'kylie-minogue', category: 'Music'), George Michael (id: 'george-michael', category: 'Music'), Cyndi Lauper (id: 'cyndi-lauper', category: 'Music'), Donna Summer (id: 'donna-summer', category: 'Music'), Judy Garland (id: 'judy-garland', category: 'Music'), and Lady Gaga (id: 'lady-gaga', category: 'Music') are absolutely included on the list. For each icon provide: 'id', 'name', 'category' (strictly one of: 'Music', 'Activism', 'Drag', 'Art', 'Film/TV', 'Literature & Theory', 'Performance Art'), 'description' (in Croatian), 'decade' (integer, e.g. 1960), 'sentimentScore' (float -1.0 to 1.0 representing media perception), and 'connections' (array of {targetId, reason, strength: float 0.1-1.0}). Ensure clear criteria for inclusion: icons must have a documented impact on queer cultural heritage. Ensure all connection targetIds point only to other icons present in the returned list. Output valid JSON.",
           config: {
             responseMimeType: "application/json",
             responseSchema: {

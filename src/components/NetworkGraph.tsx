@@ -203,17 +203,32 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
     d3.select(canvas).call(zoomBehavior);
 
     // Mouse movement/click handling
-    const handleMouseMove = (event: MouseEvent) => {
+    const getPointerCoords = (sourceEvent: any) => {
       const rect = canvas.getBoundingClientRect();
-      const mouseX = event.clientX - rect.left;
-      const mouseY = event.clientY - rect.top;
+      let clientX = sourceEvent.clientX;
+      let clientY = sourceEvent.clientY;
       
-      // Transform mouse coordinates back to data space
-      const dataX = (mouseX - transform.x) / transform.k;
-      const dataY = (mouseY - transform.y) / transform.k;
+      if (sourceEvent.touches && sourceEvent.touches.length > 0) {
+        clientX = sourceEvent.touches[0].clientX;
+        clientY = sourceEvent.touches[0].clientY;
+      } else if (sourceEvent.changedTouches && sourceEvent.changedTouches.length > 0) {
+        clientX = sourceEvent.changedTouches[0].clientX;
+        clientY = sourceEvent.changedTouches[0].clientY;
+      }
+      
+      const mouseX = clientX - rect.left;
+      const mouseY = clientY - rect.top;
+      return {
+        x: (mouseX - transform.x) / transform.k,
+        y: (mouseY - transform.y) / transform.k
+      };
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
+      const coords = getPointerCoords(event);
       
       // simulation.find uses spatial partitioning (quadtree) internally
-      const found = simulation.find(dataX, dataY, 30);
+      const found = simulation.find(coords.x, coords.y, 30);
       if (found !== hoveredNode) {
         // We set it in a way that doesn't trigger simulation tick if possible
         // but for simplicity we use state
@@ -225,13 +240,8 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
     };
 
     const handleClick = (event: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      const mouseX = event.clientX - rect.left;
-      const mouseY = event.clientY - rect.top;
-      const dataX = (mouseX - transform.x) / transform.k;
-      const dataY = (mouseY - transform.y) / transform.k;
-      
-      const found = simulation.find(dataX, dataY, 30);
+      const coords = getPointerCoords(event);
+      const found = simulation.find(coords.x, coords.y, 30);
       if (found) {
         onSelectIcon(found as QueerIcon);
       }
@@ -240,19 +250,24 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
     // Drag behavior for Canvas
     const dragBehavior = d3.drag<HTMLCanvasElement, unknown>()
       .subject((event) => {
-        const dataX = (event.x - transform.x) / transform.k;
-        const dataY = (event.y - transform.y) / transform.k;
-        return simulation.find(dataX, dataY, 40);
+        const source = event.sourceEvent || event;
+        const coords = getPointerCoords(source);
+        return simulation.find(coords.x, coords.y, 40) || null;
       })
       .on('start', (event) => {
-        if (!event.active) simulation.alphaTarget(0.3).restart();
+        // Just pin the target coordinates temporarily to avoid jumping, 
+        // but do NOT restart simulation or wake forces on simple touch/click start
         event.subject.fx = event.subject.x;
         event.subject.fy = event.subject.y;
       })
       .on('drag', (event) => {
-        // Drag coordinates need adjustment for current zoom/pan
-        event.subject.fx = (event.x - transform.x) / transform.k;
-        event.subject.fy = (event.y - transform.y) / transform.k;
+        // ONLY trigger simulation restart and alpha target when actual dragging/motion begins
+        if (!event.active) {
+          simulation.alphaTarget(0.3).restart();
+        }
+        const coords = getPointerCoords(event.sourceEvent);
+        event.subject.fx = coords.x;
+        event.subject.fy = coords.y;
       })
       .on('end', (event) => {
         if (!event.active) simulation.alphaTarget(0);

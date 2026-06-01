@@ -12,7 +12,17 @@ interface Props {
 const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null);
+  
+  const selectedIconIdRef = useRef(selectedIconId);
+  const hoveredNodeRef = useRef<any>(null);
+  const renderRef = useRef<() => void>(() => {});
+
+  useEffect(() => {
+    selectedIconIdRef.current = selectedIconId;
+    if (renderRef.current) {
+      renderRef.current();
+    }
+  }, [selectedIconId]);
 
   useEffect(() => {
     if (!canvasRef.current || !containerRef.current || !Array.isArray(icons) || icons.length === 0) return;
@@ -95,8 +105,8 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
         const isVisible = n.x! >= xMin && n.x! <= xMax && n.y! >= yMin && n.y! <= yMax;
         if (!isVisible) return;
 
-        const isSelected = n.id === selectedIconId;
-        const isHovered = hoveredNode?.id === n.id;
+        const isSelected = n.id === selectedIconIdRef.current;
+        const isHovered = hoveredNodeRef.current?.id === n.id;
         const categoryColor = CATEGORY_COLORS[n.category] || '#444';
 
         // Sentiment-aware glow
@@ -190,6 +200,8 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
       ctx.restore();
     };
 
+    renderRef.current = render;
+
     simulation.on('tick', render);
 
     // Zoom setup
@@ -228,11 +240,9 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
       const coords = getPointerCoords(event);
       
       // simulation.find uses spatial partitioning (quadtree) internally
-      const found = simulation.find(coords.x, coords.y, 30);
-      if (found !== hoveredNode) {
-        // We set it in a way that doesn't trigger simulation tick if possible
-        // but for simplicity we use state
-        setHoveredNode(found || null);
+      const found = simulation.find(coords.x, coords.y, 30) || null;
+      if (found !== hoveredNodeRef.current) {
+        hoveredNodeRef.current = found;
         render();
       }
       
@@ -285,7 +295,7 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
       canvas.removeEventListener('click', handleClick);
     };
 
-  }, [icons, onSelectIcon, selectedIconId, hoveredNode]);
+  }, [icons, onSelectIcon]);
 
   return (
     <div ref={containerRef} className="w-full h-full bg-transparent relative overflow-hidden">

@@ -469,7 +469,7 @@ async function startServer() {
       try {
         const response = await ai.models.generateContent({
           model: "gemini-3-flash-preview",
-          contents: "Generate a list of 30 diverse queer icons. For each provide: 'id', 'name', 'category' (strictly one of: 'Music', 'Activism', 'Drag', 'Art', 'Film/TV', 'Literature & Theory', 'Performance Art'), 'description' (in Croatian), 'decade' (integer, e.g. 1960), 'sentimentScore' (float -1.0 to 1.0 representing media perception), and 'connections' (array of {targetId, reason, strength: float 0.1-1.0}). Ensure clear criteria for inclusion: icons must have a documented impact on queer cultural heritage. Output valid JSON.",
+          contents: "Generate a list of exactly 30 diverse queer icons, ensuring that Lady Gaga (id: 'lady-gaga', category: 'Music') is absolutely included on the list. For each icon provide: 'id', 'name', 'category' (strictly one of: 'Music', 'Activism', 'Drag', 'Art', 'Film/TV', 'Literature & Theory', 'Performance Art'), 'description' (in Croatian), 'decade' (integer, e.g. 1960), 'sentimentScore' (float -1.0 to 1.0 representing media perception), and 'connections' (array of {targetId, reason, strength: float 0.1-1.0}). Ensure clear criteria for inclusion: icons must have a documented impact on queer cultural heritage. Ensure all connection targetIds point only to other icons present in the return list. Output valid JSON.",
           config: {
             responseMimeType: "application/json",
             responseSchema: {

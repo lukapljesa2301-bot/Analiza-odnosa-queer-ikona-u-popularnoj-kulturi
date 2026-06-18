@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import { QueerIcon, GraphNode, GraphLink } from '../types';
 import { CATEGORY_COLORS } from '../constants';
@@ -12,6 +12,7 @@ interface Props {
 const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const nodesRef = useRef<GraphNode[]>([]);
   
   const selectedIconIdRef = useRef(selectedIconId);
   const hoveredNodeRef = useRef<any>(null);
@@ -41,11 +42,37 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
     ctx.scale(dpr, dpr);
 
     // Create unique list of nodes and links
-    const nodes: GraphNode[] = icons.map(icon => ({ ...icon }));
+    if (nodesRef.current.length === 0 || nodesRef.current.length !== icons.length) {
+      nodesRef.current = icons.map(icon => ({ ...icon }));
+    } else {
+      // Update existing nodes but preserve coordinates and velocities
+      icons.forEach(currIcon => {
+        const existingNode = nodesRef.current.find(n => n.id === currIcon.id);
+        if (existingNode) {
+          Object.assign(existingNode, {
+            name: currIcon.name,
+            category: currIcon.category,
+            description: currIcon.description,
+            decade: currIcon.decade,
+            sentimentScore: currIcon.sentimentScore,
+            connections: currIcon.connections,
+          });
+        } else {
+          // If a new icon is added, push it in
+          nodesRef.current.push({ ...currIcon });
+        }
+      });
+      
+      // Filter out any nodes that are no longer present in icons list
+      nodesRef.current = nodesRef.current.filter(n => icons.some(i => i.id === n.id));
+    }
+
+    const nodes = nodesRef.current;
+
     const links: GraphLink[] = [];
     icons.forEach(icon => {
       icon.connections.forEach(conn => {
-        if (icons.some(i => i.id === conn.targetId)) {
+        if (nodes.some(i => i.id === conn.targetId)) {
           links.push({
             source: icon.id,
             target: conn.targetId,
@@ -56,9 +83,6 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
       });
     });
 
-    // Force simulation optimization:
-    // 1. theta(0.8) - Barnes-Hut optimization for ManyBody force
-    // 2. distanceMax(500) - Limits calculation to nearby nodes to maintain O(N) rather than O(N^2) for distant interactions
     const simulation = d3.forceSimulation<GraphNode>(nodes)
       .force('link', d3.forceLink<GraphNode, GraphLink>(links).id(d => d.id).distance(180))
       .force('charge', d3.forceManyBody().strength(-400).theta(0.8).distanceMax(600))
@@ -74,10 +98,10 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
       ctx.scale(transform.k, transform.k);
 
       // Viewport Culling Bounds (Data Space)
-      const xMin = -transform.x / transform.k - 100;
-      const xMax = (width - transform.x) / transform.k + 100;
-      const yMin = -transform.y / transform.k - 100;
-      const yMax = (height - transform.y) / transform.k + 100;
+      const xMin = -transform.x / transform.k - 150;
+      const xMax = (width - transform.x) / transform.k + 150;
+      const yMin = -transform.y / transform.k - 150;
+      const yMax = (height - transform.y) / transform.k + 150;
 
       // Draw Links
       ctx.beginPath();
@@ -92,8 +116,8 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
         const tIn = t.x >= xMin && t.x <= xMax && t.y >= yMin && t.y <= yMax;
         
         if (sIn || tIn) {
-          // Weighted links by strength
           ctx.lineWidth = (l.strength * 3) / transform.k;
+          ctx.strokeStyle = '#444';
           ctx.moveTo(s.x, s.y);
           ctx.lineTo(t.x, t.y);
           ctx.stroke();
@@ -178,7 +202,7 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
         ctx.fillText(initials, n.x!, n.y!);
 
         // Draw text
-        ctx.font = `${600} ${11 / transform.k}px JetBrains Mono, monospace`;
+        ctx.font = `600 ${11 / transform.k}px JetBrains Mono, monospace`;
         ctx.fillStyle = isSelected ? '#fff' : '#fafafa';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
@@ -188,7 +212,6 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
         if (transform.k > 0.4 || isSelected) {
           ctx.shadowColor = 'rgba(0,0,0,0.8)';
           ctx.shadowBlur = 4;
-          // Add decade to label for temporal context
           const label = `${n.name.toUpperCase()} (${n.decade}s)`;
           ctx.fillText(label, n.x!, n.y! + radius + 10);
         }
@@ -204,7 +227,6 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
 
     simulation.on('tick', render);
 
-    // Zoom setup
     const zoomBehavior = d3.zoom<HTMLCanvasElement, unknown>()
       .scaleExtent([0.1, 4])
       .on('zoom', (event) => {
@@ -213,6 +235,8 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
       });
 
     d3.select(canvas).call(zoomBehavior);
+    transform = d3.zoomIdentity;
+    d3.select(canvas).call(zoomBehavior.transform, transform);
 
     // Mouse movement/click handling
     const getPointerCoords = (sourceEvent: any) => {
@@ -239,7 +263,6 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
     const handleMouseMove = (event: MouseEvent) => {
       const coords = getPointerCoords(event);
       
-      // simulation.find uses spatial partitioning (quadtree) internally
       const found = simulation.find(coords.x, coords.y, 30) || null;
       if (found !== hoveredNodeRef.current) {
         hoveredNodeRef.current = found;
@@ -265,13 +288,10 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
         return simulation.find(coords.x, coords.y, 40) || null;
       })
       .on('start', (event) => {
-        // Just pin the target coordinates temporarily to avoid jumping, 
-        // but do NOT restart simulation or wake forces on simple touch/click start
         event.subject.fx = event.subject.x;
         event.subject.fy = event.subject.y;
       })
       .on('drag', (event) => {
-        // ONLY trigger simulation restart and alpha target when actual dragging/motion begins
         if (!event.active) {
           simulation.alphaTarget(0.3).restart();
         }
@@ -299,23 +319,18 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
 
   return (
     <div ref={containerRef} className="w-full h-full bg-transparent relative overflow-hidden">
-      <canvas ref={canvasRef} className="w-full h-full block" />
-      <footer className="absolute bottom-0 left-0 w-full p-6 bg-zinc-900/50 border-t border-zinc-800 flex justify-between items-center z-10 backdrop-blur-md">
-        <div className="flex gap-8 items-center overflow-x-auto no-scrollbar">
+      <canvas ref={canvasRef} className="w-full h-full block cursor-grab hover:cursor-grabbing" />
+      <footer className="absolute bottom-0 left-0 w-full p-4 md:p-6 bg-zinc-950/85 border-t border-zinc-900/80 flex flex-col md:flex-row gap-4 justify-between items-center z-10 backdrop-blur-md">
+        <div className="flex gap-6 items-center overflow-x-auto no-scrollbar max-w-full">
           {Object.entries(CATEGORY_COLORS).map(([cat, color]) => (
-            <div key={cat} className="flex items-center gap-2 shrink-0">
+            <div key={cat} className="flex items-center gap-1.5 shrink-0">
               <div 
-                className="w-2.5 h-2.5 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]" 
+                className="w-2 h-2 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]" 
                 style={{ backgroundColor: color }} 
               />
-              <span className="text-[10px] uppercase font-bold tracking-tighter text-zinc-400">{cat}</span>
+              <span className="text-[9px] uppercase font-bold tracking-wider text-zinc-400">{cat}</span>
             </div>
           ))}
-        </div>
-        
-        <div className="hidden md:flex px-4 py-2 border border-zinc-700/50 rounded-full gap-4 text-[10px] uppercase font-bold tracking-widest bg-zinc-950/50 shadow-inner">
-          <button className="text-zinc-500 hover:text-zinc-200 cursor-help transition-colors">Kronologija</button>
-          <button className="text-zinc-50 transition-colors">Mreža Veza</button>
         </div>
       </footer>
     </div>
@@ -323,4 +338,3 @@ const NetworkGraph: React.FC<Props> = ({ icons, onSelectIcon, selectedIconId }) 
 };
 
 export default NetworkGraph;
-
